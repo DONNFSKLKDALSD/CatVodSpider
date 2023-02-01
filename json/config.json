@@ -1,11 +1,13 @@
 {
-  "spider": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar;md5;d654747e1278802ffce530c6be333059",
+  "spider": "https://gh-proxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar;md5;85addabeb829c5815cdf69f9173b6e65",
   "wallpaper": "http://www.kf666888.cn/api/tvbox/img",
   "lives": [
     {
       "name": "直播",
-      "type": 0,
-      "url": "http://home.jundie.top:81/Cat/tv/live.txt"
+      "type": 1,
+      "url": "https://gh-proxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/live.json",
+      "epg": "http://epg.51zmt.top:8000/api/diyp/?ch={epg}&date={date}",
+      "logo": "http://epg.51zmt.top:8000/{logo}"
     }
   ],
   "sites": [
@@ -16,7 +18,8 @@
       "api": "csp_AList",
       "searchable": 1,
       "filterable": 1,
-      "ext": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/alist.json"
+      "switchable": 0,
+      "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/alist.json"
     },
     {
       "key": "哔哩",
@@ -25,15 +28,17 @@
       "api": "csp_Bili",
       "searchable": 1,
       "filterable": 1,
-      "ext": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/bili.json"
+      "switchable": 0,
+      "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/bili.json"
     },
     {
       "key": "泥巴",
       "name": "泥巴",
       "type": 3,
-      "api": "csp_Nbys",
+      "api": "csp_NiNi",
       "searchable": 1,
-      "filterable": 1
+      "filterable": 1,
+      "switchable": 1
     },
     {
       "key": "快播",
@@ -42,6 +47,7 @@
       "api": "https://www.kuaibozy.com/api.php/provide/vod/",
       "searchable": 1,
       "filterable": 0,
+      "switchable": 1,
       "categories": [
         "动漫",
         "国产剧",
@@ -67,6 +73,7 @@
       "api": "https://api.apibdzy.com/api.php/provide/vod/",
       "searchable": 1,
       "filterable": 0,
+      "switchable": 1,
       "categories": [
         "国产动漫",
         "日韩动漫",
@@ -89,7 +96,8 @@
       "type": 3,
       "api": "csp_Ying",
       "searchable": 1,
-      "filterable": 1
+      "filterable": 1,
+      "switchable": 1
     },
     {
       "key": "巴士",
@@ -97,7 +105,8 @@
       "type": 3,
       "api": "csp_Dm84",
       "searchable": 1,
-      "filterable": 1
+      "filterable": 1,
+      "switchable": 1
     },
     {
       "key": "異界",
@@ -105,7 +114,8 @@
       "type": 3,
       "api": "csp_Ysj",
       "searchable": 1,
-      "filterable": 1
+      "filterable": 1,
+      "switchable": 1
     },
     {
       "key": "紙條",
@@ -114,7 +124,8 @@
       "api": "csp_Paper",
       "searchable": 1,
       "filterable": 1,
-      "ext": "339541c49aab4f6c878119930894f7ab"
+      "switchable": 0,
+      "ext": "http://我不是.肥猫.love:63/token.php"
     },
     {
       "key": "易搜",
@@ -123,7 +134,8 @@
       "api": "csp_YiSo",
       "searchable": 1,
       "filterable": 0,
-      "ext": "339541c49aab4f6c878119930894f7ab"
+      "switchable": 0,
+      "ext": "http://我不是.肥猫.love:63/token.php"
     },
     {
       "key": "盤搜",
@@ -132,7 +144,38 @@
       "api": "csp_PanSou",
       "searchable": 1,
       "filterable": 0,
-      "ext": "339541c49aab4f6c878119930894f7ab"
+      "switchable": 0,
+      "ext": "http://我不是.肥猫.love:63/token.php"
+    },
+    {
+      "key": "UP雲搜",
+      "name": "UP雲搜",
+      "type": 3,
+      "api": "csp_UpYun",
+      "searchable": 1,
+      "filterable": 0,
+      "switchable": 0,
+      "ext": "http://我不是.肥猫.love:63/token.php"
+    },
+    {
+      "key": "找資源",
+      "name": "找資源",
+      "type": 3,
+      "api": "csp_Zhaozy",
+      "searchable": 1,
+      "filterable": 0,
+      "switchable": 0,
+      "ext": "http://我不是.肥猫.love:63/token.php$$$yingshi$$$abcd1234"
+    },
+    {
+      "key": "Live",
+      "name": "直播",
+      "type": 3,
+      "api": "csp_Live",
+      "searchable": 0,
+      "filterable": 0,
+      "switchable": 0,
+      "ext": "2000"
     },
     {
       "key": "push_agent",
@@ -141,7 +184,8 @@
       "api": "csp_Push",
       "searchable": 1,
       "filterable": 0,
-      "ext": "339541c49aab4f6c878119930894f7ab"
+      "switchable": 0,
+      "ext": "http://我不是.肥猫.love:63/token.php"
     }
   ]
 }

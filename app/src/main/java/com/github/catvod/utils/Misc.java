@@ -1,10 +1,12 @@
 package com.github.catvod.utils;
 
 import android.net.Uri;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -15,17 +17,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 public class Misc {
 
-    public static final String CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36";
+    public static final String CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
 
     public static boolean isVip(String url) {
         List<String> hosts = Arrays.asList("iqiyi.com", "v.qq.com", "youku.com", "le.com", "tudou.com", "mgtv.com", "sohu.com", "acfun.cn", "bilibili.com", "baofeng.com", "pptv.com");
@@ -39,12 +38,6 @@ public class Misc {
 
     public static boolean isSub(String ext) {
         return ext.equals("srt") || ext.equals("ass") || ext.equals("ssa");
-    }
-
-    public static String getSubMimeType(String type) {
-        if (type.equals("srt")) return "application/x-subrip";
-        if (type.equals("ass") || type.equals("ssa")) return "text/x-ssa";
-        return "application/x-subrip";
     }
 
     public static String getSize(double size) {
@@ -130,10 +123,10 @@ public class Misc {
     }
 
     public static String MD5(String src) {
-        return MD5(src, StandardCharsets.UTF_8);
+        return MD5(src, "UTF-8");
     }
 
-    public static String MD5(String src, Charset charset) {
+    public static String MD5(String src, String charset) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(src.getBytes(charset));
@@ -141,7 +134,7 @@ public class Misc {
             StringBuilder sb = new StringBuilder(no.toString(16));
             while (sb.length() < 32) sb.insert(0, "0");
             return sb.toString().toLowerCase();
-        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             return "";
         }
     }
@@ -154,14 +147,31 @@ public class Misc {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getDisplayMetrics());
     }
 
+    public static void loadUrl(WebView webView, String script) {
+        loadUrl(webView, script, null);
+    }
+
+    public static void loadUrl(WebView webView, String script, ValueCallback<String> callback) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) webView.evaluateJavascript(script, callback);
+        else webView.loadUrl(script);
+    }
+
     public static void addView(View view, ViewGroup.LayoutParams params) {
-        ViewGroup group = Init.getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
-        group.addView(view, params);
+        try {
+            ViewGroup group = Init.getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+            group.addView(view, params);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void removeView(View view) {
-        ViewGroup group = Init.getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
-        group.removeView(view);
+        try {
+            ViewGroup group = Init.getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+            group.removeView(view);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void loadWebView(String url, WebViewClient client) {
