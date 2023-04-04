@@ -99,6 +99,7 @@ public class Item {
     }
 
     public boolean ignore(boolean isNew) {
+        if (getName().endsWith(".ts")) return false;
         if (isNew) return getType() == 0 || getType() == 4;
         return getType() == 0 || getType() == 2 || getType() == 5;
     }
@@ -112,11 +113,11 @@ public class Item {
     }
 
     public String getPic() {
-        return getThumb().isEmpty() && isFolder() ? "http://img1.3png.com/281e284a670865a71d91515866552b5f172b.png" : getThumb();
+        return getThumb().isEmpty() && isFolder() ? "https://s1.ax1x.com/2023/04/03/pp4F4bT.png" : getThumb();
     }
 
     public String getRemark() {
-        return Utils.getSize(getSize()) + (isFolder() ? " 文件夹" : "");
+        return Utils.getSize(getSize());
     }
 
     public String getVodTag() {

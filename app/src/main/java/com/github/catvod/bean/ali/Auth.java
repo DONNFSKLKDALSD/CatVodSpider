@@ -16,14 +16,12 @@ public class Auth {
     private String accessToken;
     @SerializedName("accessTokenOpen")
     private String accessTokenOpen;
-    @SerializedName("signature")
-    private String signature;
-    @SerializedName("deviceId")
-    private String deviceId;
     @SerializedName("userId")
     private String userId;
     @SerializedName("driveId")
     private String driveId;
+    @SerializedName("expire_time")
+    private String expireTime;
 
     public static Auth objectFrom(String str) {
         Auth item = new Gson().fromJson(str, Auth.class);
@@ -62,22 +60,6 @@ public class Auth {
         this.accessTokenOpen = accessTokenOpen;
     }
 
-    public String getSignature() {
-        return TextUtils.isEmpty(signature) ? "" : signature;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
     public String getDriveId() {
         return TextUtils.isEmpty(driveId) ? "" : driveId;
     }
@@ -94,16 +76,16 @@ public class Auth {
         this.userId = userId;
     }
 
+    public String getExpireTime() {
+        return TextUtils.isEmpty(expireTime) ? "" : expireTime;
+    }
+
     public boolean isEmpty() {
         return getAccessToken().isEmpty();
     }
 
     public void clean() {
-        setRefreshTokenOpen("");
-        setAccessTokenOpen("");
-        setRefreshToken("");
         setAccessToken("");
-        setSignature("");
     }
 
     public void save() {
