@@ -7,8 +7,8 @@
       "api": "csp_Paper",
       "searchable": 1,
       "filterable": 1,
-      "switchable": 0,
-      "ext": "http://ali.饭太硬.ml/alitoken",
+      "changeable": 0,
+      "ext": "影視天下第一",
       "jar": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar"
     },
     {
@@ -18,8 +18,8 @@
       "api": "csp_YiSo",
       "searchable": 1,
       "filterable": 0,
-      "switchable": 0,
-      "ext": "http://ali.饭太硬.ml/alitoken",
+      "changeable": 0,
+      "ext": "影視天下第一",
       "jar": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar"
     },
     {
@@ -29,8 +29,8 @@
       "api": "csp_PanSou",
       "searchable": 1,
       "filterable": 0,
-      "switchable": 0,
-      "ext": "http://ali.饭太硬.ml/alitoken",
+      "changeable": 0,
+      "ext": "影視天下第一",
       "jar": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar"
     },
     {
@@ -40,8 +40,8 @@
       "api": "csp_UpYun",
       "searchable": 1,
       "filterable": 0,
-      "switchable": 0,
-      "ext": "http://ali.饭太硬.ml/alitoken",
+      "changeable": 0,
+      "ext": "影視天下第一",
       "jar": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar"
     },
     {
@@ -51,8 +51,8 @@
       "api": "csp_Zhaozy",
       "searchable": 1,
       "filterable": 0,
-      "switchable": 0,
-      "ext": "http://ali.饭太硬.ml/alitoken$$$yingshi$$$abcd1234",
+      "changeable": 0,
+      "ext": "影視天下第一$$$yingshi$$$abcd1234",
       "jar": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar"
     },
     {
@@ -62,8 +62,8 @@
       "api": "csp_Push",
       "searchable": 1,
       "filterable": 0,
-      "switchable": 0,
-      "ext": "http://ali.饭太硬.ml/alitoken",
+      "changeable": 0,
+      "ext": "影視天下第一",
       "jar": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar"
     }
   ]
