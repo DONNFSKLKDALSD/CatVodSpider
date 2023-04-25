@@ -17,6 +17,7 @@ import com.github.catvod.bean.ali.Code;
 import com.github.catvod.bean.ali.Data;
 import com.github.catvod.bean.ali.Item;
 import com.github.catvod.bean.ali.OAuth;
+import com.github.catvod.bean.ali.Sorter;
 import com.github.catvod.bean.ali.User;
 import com.github.catvod.crawler.SpiderDebug;
 import com.github.catvod.net.OkHttp;
@@ -30,12 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -258,6 +254,7 @@ public class API {
         List<String> playFrom = Arrays.asList("原畫", "超清", "高清");
         List<String> episode = new ArrayList<>();
         List<String> playUrl = new ArrayList<>();
+        Sorter.sort(files);
         for (Item file : files) episode.add(file.getDisplayName() + "$" + file.getFileId() + findSubs(file.getName(), subMap));
         for (int i = 0; i < playFrom.size(); i++) playUrl.add(TextUtils.join("#", episode));
         Vod vod = new Vod();
@@ -291,7 +288,7 @@ public class API {
             } else if (file.getCategory().equals("video") || file.getCategory().equals("audio")) {
                 files.add(file.parent(parent.getName()));
             } else if (Utils.isSub(file.getExt())) {
-                String key = file.removeExt();
+                String key = Utils.removeExt(file.getName());
                 if (!subMap.containsKey(key)) subMap.put(key, new ArrayList<>());
                 subMap.get(key).add(key + "@@@" + file.getExt() + "@@@" + file.getFileId());
             }
@@ -344,11 +341,14 @@ public class API {
 
     public String getDownloadUrl(String fileId) {
         try {
+            SpiderDebug.log("getDownloadUrl..." + fileId);
             tempIds.add(0, copy(fileId));
             JSONObject body = new JSONObject();
             body.put("file_id", tempIds.get(0));
             body.put("drive_id", user.getDriveId());
-            return new JSONObject(oauth("openFile/getDownloadUrl", body.toString(), true)).getString("url");
+            String json = oauth("openFile/getDownloadUrl", body.toString(), true);
+            SpiderDebug.log(json);
+            return new JSONObject(json).getString("url");
         } catch (Exception e) {
             Init.execute(this::deleteAll);
             e.printStackTrace();
@@ -360,6 +360,7 @@ public class API {
 
     public String getPreviewUrl(String fileId, String flag) {
         try {
+            SpiderDebug.log("getPreviewUrl..." + fileId);
             tempIds.add(0, copy(fileId));
             JSONObject body = new JSONObject();
             body.put("file_id", tempIds.get(0));
@@ -367,6 +368,7 @@ public class API {
             body.put("category", "live_transcoding");
             body.put("url_expire_sec", "14400");
             String json = oauth("openFile/getVideoPreviewPlayInfo", body.toString(), true);
+            SpiderDebug.log(json);
             JSONArray taskList = new JSONObject(json).getJSONObject("video_preview_play_info").getJSONArray("live_transcoding_task_list");
             return getPreviewQuality(taskList, flag);
         } catch (Exception e) {
@@ -401,11 +403,14 @@ public class API {
     }
 
     private void delete(String fileId) {
-        SpiderDebug.log("Delete..." + fileId);
-        String json = "{\"requests\":[{\"body\":{\"drive_id\":\"%s\",\"file_id\":\"%s\"},\"headers\":{\"Content-Type\":\"application/json\"},\"id\":\"%s\",\"method\":\"POST\",\"url\":\"/file/delete\"}],\"resource\":\"file\"}";
-        json = String.format(json, user.getDriveId(), fileId, fileId);
-        String result = auth("adrive/v2/batch", json, true);
-        if (result.length() == 211) tempIds.remove(fileId);
+        try {
+            SpiderDebug.log("Delete..." + fileId);
+            String json = "{\"requests\":[{\"body\":{\"drive_id\":\"%s\",\"file_id\":\"%s\"},\"headers\":{\"Content-Type\":\"application/json\"},\"id\":\"%s\",\"method\":\"POST\",\"url\":\"/file/delete\"}],\"resource\":\"file\"}";
+            json = String.format(json, user.getDriveId(), fileId, fileId);
+            String result = auth("adrive/v2/batch", json, true);
+            if (result.length() == 211) tempIds.remove(fileId);
+        } catch (Exception ignored) {
+        }
     }
 
     public Object[] proxySub(Map<String, String> params) {

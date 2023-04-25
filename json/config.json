@@ -1,5 +1,5 @@
 {
-  "spider": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar;md5;962a1af0469ede7b575046c69c1f52d3",
+  "spider": "https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar;md5;31931cd4ecb016c3263b041528b132ad",
   "wallpaper": "http://饭太硬.ga/深色壁纸/api.php",
   "sites": [
     {
@@ -10,7 +10,7 @@
       "searchable": 1,
       "filterable": 1,
       "changeable": 0,
-      "ext": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/alist.json"
+      "ext": "https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/alist.json"
     },
     {
       "key": "WebDAV",
@@ -20,7 +20,7 @@
       "searchable": 1,
       "filterable": 1,
       "changeable": 0,
-      "ext": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/webdav.json"
+      "ext": "https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/webdav.json"
     },
     {
       "key": "哔哩",
@@ -30,7 +30,7 @@
       "searchable": 1,
       "filterable": 1,
       "changeable": 0,
-      "ext": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/bili.json"
+      "ext": "https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/bili.json"
     },
     {
       "key": "泥巴",
@@ -49,7 +49,7 @@
       "searchable": 1,
       "filterable": 1,
       "changeable": 1,
-      "ext": "https://ghproxy.com/https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/duboku.json"
+      "ext": "https://raw.githubusercontent.com/FongMi/CatVodSpider/main/json/duboku.json"
     },
     {
       "key": "櫻花",
@@ -85,8 +85,7 @@
       "api": "csp_Paper",
       "searchable": 1,
       "filterable": 1,
-      "changeable": 0,
-      "ext": "影視天下第一"
+      "changeable": 0
     },
     {
       "key": "七夜",
@@ -95,8 +94,7 @@
       "api": "csp_Dovx",
       "searchable": 1,
       "filterable": 0,
-      "changeable": 0,
-      "ext": "影視天下第一"
+      "changeable": 0
     },
     {
       "key": "易搜",
@@ -105,8 +103,7 @@
       "api": "csp_YiSo",
       "searchable": 1,
       "filterable": 0,
-      "changeable": 0,
-      "ext": "影視天下第一"
+      "changeable": 0
     },
     {
       "key": "盤搜",
@@ -115,8 +112,7 @@
       "api": "csp_PanSou",
       "searchable": 1,
       "filterable": 0,
-      "changeable": 0,
-      "ext": "影視天下第一"
+      "changeable": 0
     },
     {
       "key": "UP雲搜",
@@ -125,8 +121,7 @@
       "api": "csp_UpYun",
       "searchable": 1,
       "filterable": 0,
-      "changeable": 0,
-      "ext": "影視天下第一"
+      "changeable": 0
     },
     {
       "key": "找資源",
@@ -136,7 +131,7 @@
       "searchable": 1,
       "filterable": 0,
       "changeable": 0,
-      "ext": "影視天下第一$$$yingshi$$$abcd1234"
+      "ext": "影視天下第一$$$test2$$$test2"
     },
     {
       "key": "push_agent",
@@ -145,8 +140,7 @@
       "api": "csp_Push",
       "searchable": 1,
       "filterable": 0,
-      "changeable": 0,
-      "ext": "影視天下第一"
+      "changeable": 0
     }
   ]
 }
