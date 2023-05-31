@@ -1,5 +1,5 @@
 {
-  "spider": "https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar;md5;af37ed94ebfb6af49a33d48a6fe005da",
+  "spider": "https://raw.githubusercontent.com/FongMi/CatVodSpider/main/jar/custom_spider.jar;md5;73954c18f409c0cadb91e6a4aff10381",
   "wallpaper": "https://gao.chuqiuyu.tk",
   "sites": [
     {
@@ -547,7 +547,8 @@
     {
       "name": "非凡廣告",
       "hosts": [
-        "vip.ffzy"
+        "vip.ffzy",
+        "hd.ffzy"
       ],
       "regex": [
         "#EXT-X-DISCONTINUITY\\r*\\n*#EXTINF:6.666667,[\\s\\S]*?#EXT-X-DISCONTINUITY"
