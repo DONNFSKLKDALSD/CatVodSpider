@@ -13,8 +13,9 @@ import android.webkit.WebViewClient;
 
 import com.github.catvod.spider.Init;
 
+import org.mozilla.universalchardet.UniversalDetector;
+
 import java.math.BigInteger;
-import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
 public class Utils {
 
     public static final String CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36";
-    public static final List<String> MEDIA = Arrays.asList("mp4", "mkv", "wmv", "flv", "avi", "mp3", "aac", "flac", "m4a");
+    public static final List<String> MEDIA = Arrays.asList("mp4", "mkv", "wmv", "flv", "avi", "mp3", "aac", "flac", "m4a", "ape", "ogg");
     public static final Pattern RULE = Pattern.compile(
             "http((?!http).){12,}?\\.(m3u8|mp4|flv|avi|mkv|rm|wmv|mpg|m4a|mp3)\\?.*|" +
                     "http((?!http).){12,}\\.(m3u8|mp4|flv|avi|mkv|rm|wmv|mpg|m4a|mp3)|" +
@@ -49,15 +50,11 @@ public class Utils {
         return hasCamera && hasPhone && hasBT;
     }
 
-    public static boolean isGbk(byte[] bytes) {
-        Charset charset = Charset.forName("GBK");
-        String str = new String(bytes, charset);
-        byte[] newBytes = str.getBytes(charset);
-        return Arrays.equals(bytes, newBytes);
-    }
-
     public static byte[] toUtf8(byte[] bytes) throws Exception {
-        return isGbk(bytes) ? new String(bytes, Charset.forName("GBK")).getBytes("UTF-8") : bytes;
+        UniversalDetector detector = new UniversalDetector(null);
+        detector.handleData(bytes, 0, bytes.length);
+        detector.dataEnd();
+        return new String(bytes, detector.getDetectedCharset()).getBytes("UTF-8");
     }
 
     public static boolean isSub(String ext) {

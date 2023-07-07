@@ -2,6 +2,7 @@ package com.github.catvod.ali;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.SystemClock;
@@ -117,9 +118,9 @@ public class API {
 
     private HashMap<String, String> getHeaderAuth() {
         HashMap<String, String> headers = getHeader();
-        headers.put("authorization", user.getAuthorization());
         headers.put("x-share-token", shareToken);
         headers.put("X-Canary", "client=Android,app=adrive,version=v4.3.1");
+        if (user.isAuthed()) headers.put("authorization", user.getAuthorization());
         return headers;
     }
 
@@ -130,8 +131,12 @@ public class API {
     }
 
     private boolean alist(String url, JSONObject body) {
-        OkResult result = OkHttp.postJson(url, body.toString(), getHeader());
-        SpiderDebug.log(result.getCode() + "," + url + "," + result.getBody());
+        //https://api-cf.nn.ci/alist/ali_open/
+        //https://api.xhofe.top/alist/ali_open/
+        //https://sni_api_nn_ci.cooluc.com/alist/ali_open/
+        String api = "https://aliapi.ewwe.gq/alist/ali_open/" + url;
+        OkResult result = OkHttp.postJson(api, body.toString(), getHeader());
+        SpiderDebug.log(result.getCode() + "," + api + "," + result.getBody());
         if (isManyRequest(result.getBody())) return false;
         oauth = OAuth.objectFrom(result.getBody()).save();
         return true;
@@ -233,7 +238,7 @@ public class API {
             JSONObject body = new JSONObject();
             body.put("code", code);
             body.put("grant_type", "authorization_code");
-            return alist("https://api.nn.ci/alist/ali_open/code", body);
+            return alist("code", body);
         } catch (Exception e) {
             e.printStackTrace();
             oauth.clean().save();
@@ -248,7 +253,7 @@ public class API {
             JSONObject body = new JSONObject();
             body.put("grant_type", "refresh_token");
             body.put("refresh_token", oauth.getRefreshToken());
-            return alist("https://api.nn.ci/alist/ali_open/token", body);
+            return alist("token", body);
         } catch (Exception e) {
             e.printStackTrace();
             oauth.clean().save();
@@ -344,7 +349,7 @@ public class API {
             String[] split = text.split("@@@");
             String name = split[0];
             String ext = split[1];
-            String url = Proxy.getUrl() + "?do=ali&type=sub" + "&file_id=" + split[2];
+            String url = Proxy.getUrl() + "?do=ali&type=sub&file_id=" + split[2];
             sub.add(Sub.create().name(name).ext(ext).url(url));
         }
         return sub;
@@ -387,7 +392,7 @@ public class API {
     }
 
     public String playerContent(String[] ids) {
-        return Result.get().url(getDownloadUrl(ids[0])).subs(getSubs(ids)).header(getHeader()).string();
+        return Result.get().url(getDownloadUrl(ids[0])).octet().subs(getSubs(ids)).header(getHeader()).string();
     }
 
     public String playerContent(String[] ids, String flag) {
@@ -396,7 +401,7 @@ public class API {
             String url = getPreviewUrl(playInfo, flag);
             List<Sub> subs = getSubs(ids);
             subs.addAll(getSubs(playInfo));
-            return Result.get().url(url).subs(subs).header(getHeader()).string();
+            return Result.get().url(url).m3u8().subs(subs).header(getHeader()).string();
         } catch (Exception e) {
             e.printStackTrace();
             return Result.get().url("").string();
@@ -472,7 +477,7 @@ public class API {
         if (Utils.isMobile()) {
             Init.run(this::showInput);
         } else {
-            showQRCode();
+            getQRCode();
         }
     }
 
@@ -490,7 +495,7 @@ public class API {
 
     private void onNeutral() {
         dismiss();
-        Init.execute(this::showQRCode);
+        Init.execute(this::getQRCode);
     }
 
     private void onPositive(String text) {
@@ -502,10 +507,23 @@ public class API {
         });
     }
 
-    private void showQRCode() {
-        String url = "https://passport.aliyundrive.com/newlogin/qrcode/generate.do?appName=aliyun_drive&fromSite=52&appName=aliyun_drive&appEntrance=web&isMobile=false&lang=zh_CN&returnUrl=&bizParams=&_bx-v=2.2.3";
-        Data data = Data.objectFrom(OkHttp.string(url)).getContent().getData();
-        Init.run(() -> showQRCode(data));
+    private void getQRCode() {
+        String json = OkHttp.string("https://passport.aliyundrive.com/newlogin/qrcode/generate.do?appName=aliyun_drive&fromSite=52&appName=aliyun_drive&appEntrance=web&isMobile=false&lang=zh_CN&returnUrl=&bizParams=&_bx-v=2.2.3");
+        Data data = Data.objectFrom(json).getContent().getData();
+        Init.run(() -> openApp(json, data));
+    }
+
+    private void openApp(String json, Data data) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setClassName("com.alicloud.databox", "com.taobao.login4android.scan.QrScanActivity");
+            intent.putExtra("key_scanParam", json);
+            Init.getActivity().startActivity(intent);
+        } catch (Exception e) {
+            showQRCode(data);
+        } finally {
+            Init.execute(() -> startService(data.getParams()));
+        }
     }
 
     private void showQRCode(Data data) {
@@ -519,7 +537,6 @@ public class API {
             frame.addView(image, params);
             dialog = new AlertDialog.Builder(Init.getActivity()).setView(frame).setOnDismissListener(this::dismiss).show();
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            Init.execute(() -> startService(data.getParams()));
             Init.show("請使用阿里雲盤 App 掃描二維碼");
         } catch (Exception ignored) {
         }
