@@ -18,7 +18,6 @@ import com.github.catvod.utils.Utils;
 
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,10 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-
-import okhttp3.Response;
 
 public class AList extends Spider {
 
@@ -91,7 +87,6 @@ public class AList extends Spider {
         fetchRule();
         String type = extend.containsKey("type") ? extend.get("type") : "";
         String order = extend.containsKey("order") ? extend.get("order") : "";
-        String key = tid.contains("/") ? tid.substring(0, tid.indexOf("/")) : tid;
         List<Item> folders = new ArrayList<>();
         List<Item> files = new ArrayList<>();
         List<Vod> list = new ArrayList<>();
@@ -105,11 +100,6 @@ public class AList extends Spider {
             Sorter.sort(type, order, files);
         }
 
-        int count = 0;
-        Drive drive = getDrive(key);
-        for (Item item : files) if (item.isMedia(drive.isNew())) count++;
-        if (count > 1) folders.add(0, Item.playList(files.get(0), vodPic));
-
         for (Item item : folders) list.add(item.getVod(tid, vodPic));
         for (Item item : files) list.add(item.getVod(tid, vodPic));
         return Result.get().vod(list).page().string();
@@ -119,7 +109,6 @@ public class AList extends Spider {
     public String detailContent(List<String> ids) throws Exception {
         fetchRule();
         String id = ids.get(0);
-        boolean list = id.endsWith("播放列表");
         String key = id.contains("/") ? id.substring(0, id.indexOf("/")) : id;
         String path = id.substring(0, id.lastIndexOf("/"));
         String name = path.substring(path.lastIndexOf("/") + 1);
@@ -128,22 +117,12 @@ public class AList extends Spider {
         Sorter.sort("name", "asc", parents);
         Vod vod = new Vod();
         vod.setVodPlayFrom(key);
-
-        if (list) {
-            vod.setVodId(id);
-            vod.setVodName(name);
-            vod.setVodPic(vodPic);
-            List<String> playUrls = new ArrayList<>();
-            for (Item item : parents) if (item.isMedia(drive.isNew())) playUrls.add(item.getName() + "$" + item.getVodId(path) + findSubs(path, parents));
-            vod.setVodPlayUrl(TextUtils.join("#", playUrls));
-        } else {
-            Item item = getDetail(id);
-            vod.setVodId(item.getVodId(id));
-            vod.setVodName(item.getName());
-            vod.setVodPic(item.getPic(vodPic));
-            vod.setVodPlayUrl(item.getName() + "$" + item.getVodId(path) + findSubs(path, parents));
-        }
-
+        vod.setVodId(id);
+        vod.setVodName(name);
+        vod.setVodPic(vodPic);
+        List<String> playUrls = new ArrayList<>();
+        for (Item item : parents) if (item.isMedia(drive.isNew())) playUrls.add(item.getName() + "$" + item.getVodId(path) + findSubs(path, parents));
+        vod.setVodPlayUrl(TextUtils.join("#", playUrls));
         return Result.string(vod);
     }
 
@@ -260,20 +239,9 @@ public class AList extends Spider {
             String[] split = text.split("@@@");
             String name = split[0];
             String ext = split[1];
-            String url = Proxy.getUrl() + "?do=alist&url=" + getDetail(split[2]).getUrl();
+            String url = getDetail(split[2]).getUrl();
             sub.add(Sub.create().name(name).ext(ext).url(url));
         }
         return sub;
-    }
-
-    public static Object[] proxy(Map<String, String> params) throws Exception {
-        String url = params.get("url");
-        Response res = OkHttp.newCall(url);
-        byte[] body = Utils.toUtf8(res.body().bytes());
-        Object[] result = new Object[3];
-        result[0] = 200;
-        result[1] = "application/octet-stream";
-        result[2] = new ByteArrayInputStream(body);
-        return result;
     }
 }
