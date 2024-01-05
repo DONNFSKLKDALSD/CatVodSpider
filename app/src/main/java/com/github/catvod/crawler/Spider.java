@@ -2,15 +2,21 @@ package com.github.catvod.crawler;
 
 import android.content.Context;
 
+import com.github.catvod.net.OkHttp;
+
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import okhttp3.Dns;
+import okhttp3.OkHttpClient;
 
 public abstract class Spider {
 
-    public void init(Context context) {
+    public void init(Context context) throws Exception {
     }
 
-    public void init(Context context, String extend) {
+    public void init(Context context, String extend) throws Exception {
         init(context);
     }
 
@@ -50,6 +56,18 @@ public abstract class Spider {
         return false;
     }
 
+    public Object[] proxyLocal(Map<String, String> params) throws Exception {
+        return null;
+    }
+
     public void destroy() {
+    }
+
+    public static Dns safeDns() {
+        return Dns.SYSTEM;
+    }
+
+    public OkHttpClient client() {
+        return OkHttp.client();
     }
 }

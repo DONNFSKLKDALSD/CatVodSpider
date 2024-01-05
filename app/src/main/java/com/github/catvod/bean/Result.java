@@ -1,6 +1,8 @@
 package com.github.catvod.bean;
 
+import com.github.catvod.utils.Util;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +28,12 @@ public class Result {
     private String header;
     @SerializedName("format")
     private String format;
+    @SerializedName("danmaku")
+    private String danmaku;
+    @SerializedName("msg")
+    private String msg;
     @SerializedName("url")
-    private String url;
+    private Object url;
     @SerializedName("subs")
     private List<Sub> subs;
     @SerializedName("parse")
@@ -54,7 +61,15 @@ public class Result {
         return Result.get().classes(classes).vod(list).filters(filters).string();
     }
 
+    public static String string(List<Class> classes, List<Vod> list, JsonElement filters) {
+        return Result.get().classes(classes).vod(list).filters(filters).string();
+    }
+
     public static String string(List<Class> classes, LinkedHashMap<String, List<Filter>> filters) {
+        return Result.get().classes(classes).filters(filters).string();
+    }
+
+    public static String string(List<Class> classes, JsonElement filters) {
         return Result.get().classes(classes).filters(filters).string();
     }
 
@@ -72,6 +87,10 @@ public class Result {
 
     public static String string(Vod item) {
         return Result.get().vod(item).string();
+    }
+
+    public static String error(String msg) {
+        return Result.get().vod(Collections.emptyList()).msg(msg).string();
     }
 
     public static Result get() {
@@ -105,9 +124,23 @@ public class Result {
         return this;
     }
 
+    public Result filters(JsonElement element) {
+        if (element == null) return this;
+        Type listType = new TypeToken<LinkedHashMap<String, List<Filter>>>() {}.getType();
+        this.filters = new Gson().fromJson(element.toString(), listType);
+        return this;
+    }
+
     public Result header(Map<String, String> header) {
         if (header.isEmpty()) return this;
         this.header = new Gson().toJson(header);
+        return this;
+    }
+
+    public Result chrome() {
+        Map<String, String> header = new HashMap<>();
+        header.put("User-Agent", Util.CHROME);
+        header(header);
         return this;
     }
 
@@ -128,6 +161,21 @@ public class Result {
 
     public Result url(String url) {
         this.url = url;
+        return this;
+    }
+
+    public Result url(List<String> url) {
+        this.url = url;
+        return this;
+    }
+
+    public Result danmaku(String danmaku) {
+        this.danmaku = danmaku;
+        return this;
+    }
+
+    public Result msg(String msg) {
+        this.msg = msg;
         return this;
     }
 
@@ -183,6 +231,6 @@ public class Result {
 
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        return new Gson().newBuilder().disableHtmlEscaping().create().toJson(this);
     }
 }

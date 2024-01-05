@@ -1,6 +1,7 @@
 package com.github.catvod.spider;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
 
 import com.github.catvod.bean.Class;
@@ -9,7 +10,7 @@ import com.github.catvod.bean.Sub;
 import com.github.catvod.bean.Vod;
 import com.github.catvod.crawler.Spider;
 import com.github.catvod.utils.Image;
-import com.github.catvod.utils.Utils;
+import com.github.catvod.utils.Util;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -19,7 +20,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class Local extends Spider {
 
@@ -55,29 +55,43 @@ public class Local extends Spider {
         for (File file : files) {
             if (file.getName().startsWith(".")) continue;
             if (file.isDirectory()) folders.add(create(file));
-            else if (Utils.MEDIA.contains(Utils.getExt(file.getName()))) media.add(create(file));
+            else if (Util.isMedia(file.getName())) media.add(create(file));
         }
         items.addAll(folders);
         items.addAll(media);
-        return Result.string(items);
+        return Result.get().vod(items).page().string();
     }
 
     @Override
     public String detailContent(List<String> ids) {
-        File file = new File(ids.get(0));
-        Vod vod = new Vod();
-        vod.setTypeName("FongMi");
-        vod.setVodId(file.getAbsolutePath());
-        vod.setVodName(file.getName());
-        vod.setVodPic(Image.VIDEO);
-        vod.setVodPlayFrom("播放");
-        vod.setVodPlayUrl(file.getName() + "$" + file.getAbsolutePath());
-        return Result.string(vod);
+        String url = ids.get(0);
+        if (url.startsWith("http")) {
+            String name = Uri.parse(url).getLastPathSegment();
+            return Result.string(create(name, url));
+        } else {
+            File file = new File(ids.get(0));
+            return Result.string(create(file.getName(), file.getAbsolutePath()));
+        }
     }
 
     @Override
     public String playerContent(String flag, String id, List<String> vipFlags) throws Exception {
-        return Result.get().url("file://" + id).subs(getSubs(id)).string();
+        if (id.startsWith("http")) {
+            return Result.get().url(id).string();
+        } else {
+            return Result.get().url("file://" + id).subs(getSubs(id)).string();
+        }
+    }
+
+    private Vod create(String name, String url) {
+        Vod vod = new Vod();
+        vod.setTypeName("FongMi");
+        vod.setVodId(url);
+        vod.setVodName(name);
+        vod.setVodPic(Image.VIDEO);
+        vod.setVodPlayFrom("播放");
+        vod.setVodPlayUrl(name + "$" + url);
+        return vod;
     }
 
     private Vod create(File file) {
@@ -94,9 +108,9 @@ public class Local extends Spider {
         File file = new File(path);
         if (file.getParentFile() == null) return Collections.emptyList();
         List<Sub> subs = new ArrayList<>();
-        for (File f : Objects.requireNonNull(file.getParentFile().listFiles())) {
-            String ext = Utils.getExt(f.getName());
-            if (Utils.isSub(ext)) subs.add(Sub.create().name(Utils.removeExt(f.getName())).ext(ext).url("file://" + f.getAbsolutePath()));
+        for (File f : file.getParentFile().listFiles()) {
+            String ext = Util.getExt(f.getName());
+            if (Util.isSub(ext)) subs.add(Sub.create().name(Util.removeExt(f.getName())).ext(ext).url("file://" + f.getAbsolutePath()));
         }
         return subs;
     }

@@ -34,12 +34,16 @@ public class Resp {
 
         @SerializedName("bvid")
         private String bvid;
+        @SerializedName("aid")
+        private String aid;
         @SerializedName("title")
         private String title;
         @SerializedName("pic")
         private String pic;
         @SerializedName("duration")
         private String duration;
+        @SerializedName("length")
+        private String length;
 
         public static List<Result> arrayFrom(JsonElement str) {
             Type listType = new TypeToken<List<Result>>() {}.getType();
@@ -50,12 +54,20 @@ public class Resp {
             return TextUtils.isEmpty(bvid) ? "" : bvid;
         }
 
+        public String getAid() {
+            return TextUtils.isEmpty(aid) ? "" : aid;
+        }
+
         public String getTitle() {
             return TextUtils.isEmpty(title) ? "" : title;
         }
 
         public String getDuration() {
-            return TextUtils.isEmpty(duration) ? "" : duration;
+            return TextUtils.isEmpty(duration) ? getLength() : duration.split(":")[0] + "分鐘";
+        }
+
+        public String getLength() {
+            return TextUtils.isEmpty(length) ? "" : length;
         }
 
         public String getPic() {
@@ -64,10 +76,10 @@ public class Resp {
 
         public Vod getVod() {
             Vod vod = new Vod();
-            vod.setVodId(getBvId());
+            vod.setVodId(getBvId() + "@" + getAid());
             vod.setVodName(Jsoup.parse(getTitle()).text());
-            vod.setVodRemarks(getDuration().split(":")[0] + "分鐘");
             vod.setVodPic(getPic().startsWith("//") ? "https:" + getPic() : getPic());
+            vod.setVodRemarks(getDuration());
             return vod;
         }
     }

@@ -12,10 +12,12 @@ public class Data {
 
     @SerializedName("result")
     private JsonElement result;
+    @SerializedName("list")
+    private JsonElement list;
     @SerializedName("isLogin")
     private Boolean isLogin;
-    @SerializedName("vipType")
-    private Integer vipType;
+    @SerializedName("vipStatus")
+    private Integer vipStatus;
     @SerializedName("qrcode_key")
     private String qrcodeKey;
     @SerializedName("url")
@@ -42,17 +44,29 @@ public class Data {
     private List<Page> pages;
     @SerializedName("dash")
     private Dash dash;
+    @SerializedName("owner")
+    private Owner owner;
+    @SerializedName("wbi_img")
+    private Wbi wbi;
 
     public JsonElement getResult() {
         return result;
+    }
+
+    public JsonElement getList() {
+        return list;
     }
 
     public boolean isLogin() {
         return isLogin != null && isLogin;
     }
 
-    public int getVipType() {
-        return vipType == null ? 0 : vipType;
+    public Integer getVipStatus() {
+        return vipStatus;
+    }
+
+    public boolean isVip() {
+        return vipStatus != null && vipStatus != 0;
     }
 
     public String getQrcodeKey() {
@@ -105,5 +119,13 @@ public class Data {
 
     public Dash getDash() {
         return dash == null ? new Dash() : dash;
+    }
+
+    public Owner getOwner() {
+        return owner == null ? new Owner() : owner;
+    }
+
+    public Wbi getWbi() {
+        return wbi == null ? new Wbi() : wbi;
     }
 }
